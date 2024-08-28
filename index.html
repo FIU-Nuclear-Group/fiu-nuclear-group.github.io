@@ -41,6 +41,19 @@
             padding: 20px;
             font-size: 20px;
         }
+
+        .container {
+            display: flex;
+            align-items: center;
+        }
+        .container img {
+            max-width: 50%;
+            height: auto;
+        }
+        .container .text {
+            padding-left: 20px;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -50,16 +63,27 @@
     </div>
 
     <div class="navbar">
-        <a href="home.html">Home</a>
+        <a href="index.html">Home</a>
         <a href="about_us.html">About Us</a>
         <a href="https://github.com/FIU-Nuclear-Group" target="_blank">Github</a>
         <a href="cpr.html">CPR</a>
         <a href="contact.html">Contact</a>
     </div>
 
-    <div class="content">
-        <h2>Who we are.</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="container">
+        <img src = "bubble_chamber.jpeg" alt = "A bubble chamber.">
+        <div class = "text">
+            <h2>Who we are.</h2>
+            <p>Welcome to the FIU Nuclear Physics Research Group. Our group explores the fundamental building blocks of matter and the forces that govern them.</p>
+            <p>By studying the interactions between particles, we can understand the forces at play in the subatomic world. </p>
+        </div>
+    </div>
+
+    <div class = "content">
+        <h2>Research</h2>
+        <p>Strangeness</p>
+        <p>Rho decay channels</p>
+        <p>proton anti-proton production</p>
     </div>
 
 </body>
