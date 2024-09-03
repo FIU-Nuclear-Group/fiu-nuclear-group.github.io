@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetings</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .header h1 {
+            font-size: 48px;
+            margin: 0;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .calendar {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .month h1 {
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+        .days-of-week, .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }       
+
+        .days-of-week div {
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .days div {
+            text-align: center;
+            padding: 15px;
+            margin: 5px;
+            border-radius: 5px;
+            background: #eaeaea;
+            color: #333;
+        }
+
+        .days div:hover {
+            background: #ddd;
+            cursor: pointer;
+        }
+
+        .meeting {
+            float: center;
+        }
+
+        .meeting span{
+            float: left;
+            display: block;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Meetings</h1>
+    </div>
+
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="about_us.html">About Us</a>
+        <a href="publications.html">Publications</a>
+        <a href="https://github.com/FIU-Nuclear-Group" target="_blank">Github</a>
+        <a href="cpr.html">CPR</a>
+        <a href="meetings.html">Meetings</a>
+    </div>
+
+    <div class="calendar">
+        <div class="month">
+            <h1 id="month-year"></h1>
+        </div>
+        <div class="days-of-week">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+        </div>
+        <div class="days" id="calendar-days">
+            <!-- Days of the month will be generated here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Function to generate the calendar
+        function generateCalendar(month, year) {
+            const calendarDays = document.getElementById("calendar-days");
+            const monthYear = document.getElementById("month-year");
+
+            // Set the month and year title
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            monthYear.innerText = `${monthNames[month]} ${year}`;
+
+            // Clear the calendar
+            calendarDays.innerHTML = "";
+
+            // Get the first day of the month and the total days in the month
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            // Add blank days for the previous month
+            for (let i = 0; i < firstDay; i++) {
+                const blankDay = document.createElement("div");
+                calendarDays.appendChild(blankDay);
+            }
+
+            // Add days of the current month
+            for (let day = 1; day <= totalDays; day++) {
+                const dayDiv = document.createElement("div");
+                dayDiv.innerText = day;
+
+                // Determine the day of the week (0: Sunday, 1: Monday, ..., 6: Saturday)
+                const dayOfWeek = (firstDay + day - 1) % 7;
+
+                // Check for weekly meetings on Mondays
+                if (dayOfWeek === 1) {
+                    dayDiv.classList.add("meeting");
+                    dayDiv.innerHTML += '<span> CLAS Meetings <br> 2:30PM </span>'
+                }
+
+                // Check for biweekly meetings on Wednesdays (first and third Wednesday)
+                if (dayOfWeek === 3) {
+                    const weekNumber = Math.ceil((day + firstDay) / 7);
+                    if (weekNumber === 2 || weekNumber === 4) {
+                        dayDiv.classList.add("meeting");
+                        dayDiv.innerHTML += '<span>J-Lab Meeting<br> 3:00PM </span>'
+                    }
+                }
+                if (dayOfWeek === 5) {
+                    dayDiv.classList.add("meeting");
+                    dayDiv.innerHTML += '<span> Intern Meeting<br> 3:00PM</span>'
+                }
+
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+
+        // Initialize the calendar for September 2024
+        generateCalendar(8, 2024);
+    </script>
+
+</body>
+</html>
