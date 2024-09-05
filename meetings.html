@@ -155,7 +155,7 @@
                 // Check for weekly meetings on Mondays
                 if (dayOfWeek === 1) {
                     dayDiv.classList.add("meeting");
-                    dayDiv.innerHTML += '<span> CLAS Meetings <br> 2:30PM </span>'
+                    dayDiv.innerHTML += '<span> CLAS Meeting <br> 2:30PM <br> CP 257</span>'
                 }
 
                 // Check for biweekly meetings on Wednesdays (first and third Wednesday)
@@ -163,12 +163,12 @@
                     const weekNumber = Math.ceil((day + firstDay) / 7);
                     if (weekNumber === 2 || weekNumber === 4) {
                         dayDiv.classList.add("meeting");
-                        dayDiv.innerHTML += '<span>J-Lab Meeting<br> 3:00PM </span>'
+                        dayDiv.innerHTML += '<span>J-Lab Meeting<br> 3:00PM <br> CP 220 / F224</span>'
                     }
                 }
                 if (dayOfWeek === 5) {
                     dayDiv.classList.add("meeting");
-                    dayDiv.innerHTML += '<span> Intern Meeting<br> 3:00PM</span>'
+                    dayDiv.innerHTML += '<span> Intern Meeting<br> 1:30PM</span>'
                 }
 
                 calendarDays.appendChild(dayDiv);
