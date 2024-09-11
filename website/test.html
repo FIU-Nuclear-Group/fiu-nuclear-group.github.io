@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar with Meetings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .calendar {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        .month h1 {
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+
+        .days-of-week, .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .days-of-week div {
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .days div {
+            text-align: left;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            background: #eaeaea;
+            color: #333;
+            position: relative;
+            height: 70px;
+        }
+
+        .days div:hover {
+            background: #ddd;
+            cursor: pointer;
+        }
+
+        .meeting {
+            color: white;
+        }
+
+        .meeting span {
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .meeting:hover {
+            background: #e5533d;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="month">
+            <h1 id="month-year">September 2024</h1>
+        </div>
+        <div class="days-of-week">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+        </div>
+        <div class="days" id="calendar-days">
+            <!-- Days of the month will be generated here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        function generateCalendar(month, year) {
+            const calendarDays = document.getElementById("calendar-days");
+            const monthYear = document.getElementById("month-year");
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            monthYear.innerText = `${monthNames[month]} ${year}`;
+
+            calendarDays.innerHTML = "";
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const blankDay = document.createElement("div");
+                calendarDays.appendChild(blankDay);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dayDiv = document.createElement("div");
+                dayDiv.innerHTML = `<strong>${day}</strong><hr>`;
+
+                const dayOfWeek = (firstDay + day - 1) % 7;
+
+                // Weekly meetings on Mondays (dayOfWeek === 1)
+                if (dayOfWeek === 1) {
+                    dayDiv.classList.add("meeting");
+                    dayDiv.innerHTML += `<span>Weekly Meeting<br>10:00 AM</span>`;
+                }
+
+                // Biweekly meetings on 2nd and 4th Wednesdays (dayOfWeek === 3)
+                if (dayOfWeek === 3) {
+                    const weekNumber = Math.floor((day + firstDay - 1) / 7) + 1;
+                    if (weekNumber === 2 || weekNumber === 4) {
+                        dayDiv.classList.add("meeting");
+                        dayDiv.innerHTML += `<span>Biweekly Meeting<br>2:00 PM</span>`;
+                    }
+                }
+
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+
+        generateCalendar(8, 2024); // September 2024
+    </script>
+</body>
+</html>
