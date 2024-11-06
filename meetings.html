@@ -42,6 +42,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
         }
         .month h1 {
             text-align: center;
@@ -52,14 +53,12 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
         }       
-
         .days-of-week div {
             text-align: center;
             padding: 10px;
             font-weight: bold;
             color: #000000;
         }
-
         .days div {
             text-align: center;
             padding: 15px;
@@ -68,23 +67,39 @@
             background: #eaeaea;
             color: #333;
         }
-
         .days div:hover {
             background: #ddd;
             cursor: pointer;
         }
-
         .meeting {
-            float: center;
+            background: #ffeb3b;
+            border: 1px solid #ffca28;
         }
-
-        .meeting span{
-            float: left;
-            display: block;
-            color: rgb(0, 0, 0);
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 300px;
             text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
+        }
+        .popup .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+        #popup-content {
+            text-align: center;
         }
     </style>
 </head>
@@ -121,61 +136,83 @@
         </div>
     </div>
 
+    <div id="meeting-popup" class="popup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <div id="popup-content"></div>
+    </div>
+
     <script>
-        // Function to generate the calendar
         function generateCalendar(month, year) {
             const calendarDays = document.getElementById("calendar-days");
             const monthYear = document.getElementById("month-year");
 
-            // Set the month and year title
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             monthYear.innerText = `${monthNames[month]} ${year}`;
-
-            // Clear the calendar
             calendarDays.innerHTML = "";
 
-            // Get the first day of the month and the total days in the month
             const firstDay = new Date(year, month, 1).getDay();
             const totalDays = new Date(year, month + 1, 0).getDate();
 
-            // Add blank days for the previous month
+            function isWeeklyMeeting(dayOfWeek) {
+                return dayOfWeek === 1 || dayOfWeek === 5;
+            }
+
+            function isBiweeklyMeeting(day, dayOfWeek, firstDay) {
+                const weekNumber = Math.ceil((day + firstDay) / 7);
+                return dayOfWeek === 3 && (weekNumber === 2 || weekNumber === 4);
+            }
+
             for (let i = 0; i < firstDay; i++) {
                 const blankDay = document.createElement("div");
                 calendarDays.appendChild(blankDay);
             }
 
-            // Add days of the current month
             for (let day = 1; day <= totalDays; day++) {
                 const dayDiv = document.createElement("div");
                 dayDiv.innerText = day;
-
-                // Determine the day of the week (0: Sunday, 1: Monday, ..., 6: Saturday)
                 const dayOfWeek = (firstDay + day - 1) % 7;
 
-                // Check for weekly meetings on Mondays
-                if (dayOfWeek === 1) {
+                let meetingDetails = null;
+                let pdfLink = null;
+
+                if (isWeeklyMeeting(dayOfWeek)) {
+                    if (dayOfWeek === 1) {
+                        dayDiv.classList.add("meeting");
+                        meetingDetails = "CLAS Meeting<br>2:30PM<br>CP 257";
+                    }
+                    if (dayOfWeek === 5) {
+                        dayDiv.classList.add("meeting");
+                        meetingDetails = "Intern Meeting<br>1:30PM";
+                    }
+                } else if (isBiweeklyMeeting(day, dayOfWeek, firstDay)) {
                     dayDiv.classList.add("meeting");
-                    dayDiv.innerHTML += '<span> CLAS Meeting <br> 2:30PM <br> CP 257</span>'
+                    meetingDetails = "J-Lab Meeting<br>3:00PM<br>CP 220 / F224";
+                    pdfLink = "path/to/J_Lab_Meeting_Sept.pdf";
                 }
 
-                // Check for biweekly meetings on Wednesdays (first and third Wednesday)
-                if (dayOfWeek === 3) {
-                    const weekNumber = Math.ceil((day + firstDay) / 7);
-                    if (weekNumber === 2 || weekNumber === 4) {
-                        dayDiv.classList.add("meeting");
-                        dayDiv.innerHTML += '<span>J-Lab Meeting<br> 3:00PM <br> CP 220 / F224</span>'
-                    }
-                }
-                if (dayOfWeek === 5) {
-                    dayDiv.classList.add("meeting");
-                    dayDiv.innerHTML += '<span> Intern Meeting<br> 1:30PM</span>'
+                if (meetingDetails) {
+                    dayDiv.addEventListener("click", () => showPopup(meetingDetails, pdfLink));
                 }
 
                 calendarDays.appendChild(dayDiv);
             }
         }
 
-        // Initialize the calendar for September 2024
+        function showPopup(details, pdfLink) {
+            const popup = document.getElementById("meeting-popup");
+            const popupContent = document.getElementById("popup-content");
+            popupContent.innerHTML = details;
+            if (pdfLink) {
+                popupContent.innerHTML += `<br><a href="${pdfLink}" target="_blank">View Presentation PDF</a>`;
+            }
+            popup.style.display = "block";
+        }
+
+        function closePopup() {
+            const popup = document.getElementById("meeting-popup");
+            popup.style.display = "none";
+        }
+
         generateCalendar(10, 2024);
     </script>
 
