@@ -145,36 +145,36 @@
         function generateCalendar(month, year) {
             const calendarDays = document.getElementById("calendar-days");
             const monthYear = document.getElementById("month-year");
-
+    
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             monthYear.innerText = `${monthNames[month]} ${year}`;
             calendarDays.innerHTML = "";
-
+    
             const firstDay = new Date(year, month, 1).getDay();
             const totalDays = new Date(year, month + 1, 0).getDate();
-
+    
             function isWeeklyMeeting(dayOfWeek) {
                 return dayOfWeek === 1 || dayOfWeek === 5;
             }
-
+    
             function isBiweeklyMeeting(day, dayOfWeek, firstDay) {
                 const weekNumber = Math.ceil((day + firstDay) / 7);
                 return dayOfWeek === 3 && (weekNumber === 2 || weekNumber === 4);
             }
-
+    
             for (let i = 0; i < firstDay; i++) {
                 const blankDay = document.createElement("div");
                 calendarDays.appendChild(blankDay);
             }
-
+    
             for (let day = 1; day <= totalDays; day++) {
                 const dayDiv = document.createElement("div");
                 dayDiv.innerText = day;
                 const dayOfWeek = (firstDay + day - 1) % 7;
-
+    
                 let meetingDetails = null;
-                let pdfLink = null;
-
+                let pdfLinks = [];
+    
                 if (isWeeklyMeeting(dayOfWeek)) {
                     if (dayOfWeek === 1) {
                         dayDiv.classList.add("meeting");
@@ -187,35 +187,39 @@
                 } else if (isBiweeklyMeeting(day, dayOfWeek, firstDay)) {
                     dayDiv.classList.add("meeting");
                     meetingDetails = "J-Lab Meeting<br>3:00PM<br>CP 220 / F224";
-                    pdfLink = "Meetings/Presentations/yield_uncertainty.pdf";
-                    pdfLink = "path/to/J_Lab_Meeting.pdf"
+                    pdfLinks.push("Meetings/Presentations/yield_uncertainty.pdf");
                 }
-
+    
                 if (meetingDetails) {
-                    dayDiv.addEventListener("click", () => showPopup(meetingDetails, pdfLink));
+                    dayDiv.addEventListener("click", () => showPopup(meetingDetails, pdfLinks));
                 }
-
+    
                 calendarDays.appendChild(dayDiv);
             }
         }
-
-        function showPopup(details, pdfLink) {
+    
+        function showPopup(details, pdfLinks) {
             const popup = document.getElementById("meeting-popup");
             const popupContent = document.getElementById("popup-content");
             popupContent.innerHTML = details;
-            if (pdfLink) {
-                popupContent.innerHTML += `<br><a href="${pdfLink}" target="_blank">View Presentation PDF</a>`;
+            
+            if (pdfLinks.length > 0) {
+                pdfLinks.forEach((link, index) => {
+                    popupContent.innerHTML += `<br><a href="${link}" target="_blank">View Presentation PDF ${index + 1}</a>`;
+                });
             }
+            
             popup.style.display = "block";
         }
-
+    
         function closePopup() {
             const popup = document.getElementById("meeting-popup");
             popup.style.display = "none";
         }
-
+    
         generateCalendar(10, 2024);
     </script>
+    
 
 </body>
 </html>
